@@ -116,8 +116,6 @@ def login(driver):
 
     cookies = driver.get_cookies()
 
-    driver.quit()
-
     data = json.dumps(cookies)
     addon = xbmcaddon.Addon()
     addon_userdata_dir = translatePath(addon.getAddonInfo('profile'))
@@ -220,6 +218,7 @@ def router(paramstring):
         if params['action'] == 'login':
             driver = init_driver(session = False)
             login(driver)
+            driver.quit()
         elif params['action'] == 'test':
             test()
         elif params['action'] == 'list_streams':
