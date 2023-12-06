@@ -116,8 +116,12 @@ def login(driver):
     sleep(2)
 
     cookies = driver.get_cookies()
-
     data = json.dumps(cookies)
+    save_session(data)
+    return data
+
+
+def save_session(data):
     addon = xbmcaddon.Addon()
     addon_userdata_dir = translatePath(addon.getAddonInfo('profile'))
     filename = os.path.join(addon_userdata_dir, 'session.txt')
@@ -126,7 +130,7 @@ def login(driver):
             f.write('%s\n' % data)
     except IOError:
         xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba uložení session', xbmcgui.NOTIFICATION_ERROR, 5000)
-    return data
+
 
 def load_session():
     data = None
@@ -138,8 +142,9 @@ def load_session():
             for row in f:
                 session_data = row[:-1]
         data = json.loads(session_data)
-    except IOError:
-        xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba načtení session', xbmcgui.NOTIFICATION_ERROR, 5000)
+    except IOError as error:
+        if error.errno != 2:
+            xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba načtení session', xbmcgui.NOTIFICATION_ERROR, 5000)
     return data
 
 
