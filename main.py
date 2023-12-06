@@ -66,12 +66,13 @@ def init_driver(session = False):
     else:
         driver = webdriver.Remote(command_executor='http://127.0.0.1:4444/wd/hub', desired_capabilities=options.to_capabilities())
     if session == True: 
-      cookies = load_session()
-      if cookies is None:
-          cookies = login(driver)
-      driver.get('https://www.tipsport.cz/rest/')
-      for cookie in cookies:
-          driver.add_cookie(cookie)
+        cookies = load_session()
+        if cookies is None:
+            login(driver)
+            cookies = load_session()
+        driver.get('https://www.tipsport.cz/rest/')
+        for cookie in cookies:
+            driver.add_cookie(cookie)
     return driver
 
 
