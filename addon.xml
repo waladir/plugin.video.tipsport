@@ -1,0 +1,28 @@
+﻿<addon id="plugin.video.tipsport" name="Tipsport.cz" provider-name="waladir" version="1.0.0">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0"/>
+    <import addon="script.module.selenium"/>
+    <import addon="script.module.six"/>
+    <import addon="script.module.certifi"/>
+    <import addon="script.module.urllib3"/>    
+  </requires>
+  <extension library="main.py" point="xbmc.python.pluginsource">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="cs_CZ">Tipsport.cz</summary>
+    <description lang="cs_CZ">
+Doplněk umožňuje sledování live streamů z webu www.tipsport.cz. Pro sledování je nutné mít zřízený účet a možnost přehrávat streamy (stačí vsadit jednou za 30 dní za Kč 30,-)
+Informace o zprovoznění doplňku najdete na https://github.com/waladir/plugin.video.tipsport
+    </description>    
+    <platform>all</platform>
+    <source>https://github.com/waladir/plugin.video.tipsport</source>
+    <news>
+v1.0.0 (6.12.2023)
+- první verze
+    </news>
+    <assets>
+        <icon>icon.png</icon>
+    </assets>
+  </extension>
+</addon>
