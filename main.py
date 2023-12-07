@@ -93,7 +93,10 @@ def api_call(url):
             data = json.loads(driver.find_element(By.TAG_NAME, 'body').text)
         except Exception as e:
             pass
-    driver.quit()
+    try:
+        driver.quit()
+    except Exception as e:
+        xbmcgui.Dialog().notification('Tipsport.cz', 'Došlo k chybě při volání prohlížeče', xbmcgui.NOTIFICATION_ERROR, 5000)
     return data
 
 
