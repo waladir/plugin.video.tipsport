@@ -8,7 +8,7 @@
 Stáhněte a nainstalujte <a href="https://codeload.github.com/waladir/script.module.selenium/zip/refs/heads/master">doplněk selenium</a> a samotný <a href="https://codeload.github.com/waladir/plugin.video.tipsport/zip/refs/heads/master">Tipsport.cz</a>
 
 <h4>CoreELEC/LibreELEC</h4>
-Pokud chcete provozovat doplněk v CoreELEC/LibreELEC, kde Google Chrome nejde standardně nainstalovat, nainstalujte si z nejprve z repozitáře CoreELEC/LibreELEC docker. Připojte se přes ssh a vytvořte a nastartujte container (cca. 1.3 GB!):
+Pokud chcete provozovat doplněk v CoreELEC/LibreELEC, kde Google Chrome nejde standardně nainstalovat, nainstalujte si z nejprve z repozitáře CoreELEC/LibreELEC docker. Připojte se přes ssh (<a href="https://wiki.coreelec.org/coreelec:ssh">postup CoreELEC</a>) a vytvořte a nastartujte container (cca. 1.3 GB!):
 
 <pre>
 docker create \
