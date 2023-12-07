@@ -3,6 +3,7 @@
 	<category label="Přihlášení">
                 <setting label="Login" type="text" id="username" default=""/>
                 <setting label="Heslo" type="text" id="password" option="hidden" enable="!eq(-1,false)" default=""/>
+                <setting label="Nové přihlášení" type="action" action="RunPlugin(plugin://plugin.video.tipsport?action=login)"/>                
                 <setting label="Prohlížeč" type="select" id="browser" values="lokální Google Chrome|docker" default="lokální Google Chrome"/>
 	</category>
 </settings>

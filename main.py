@@ -4,6 +4,7 @@ import sys
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
+from xbmcvfs import translatePath
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -15,14 +16,7 @@ from selenium.webdriver.common.driver_utils import get_driver_path
 
 from time import sleep
 import json
-
-from urllib.parse import parse_qsl
-from urllib.parse import urlencode
-
-try:
-    from xbmcvfs import translatePath
-except ImportError:
-    from xbmc import translatePath
+from urllib.parse import parse_qsl,urlencode
 
 _url = sys.argv[0]
 if len(sys.argv) > 1:
@@ -212,12 +206,12 @@ def list_sports():
 
 def list_menu():
     list_sports()
-    list_item = xbmcgui.ListItem(label = 'Přihlášení')
-    url = get_url(action='login')
-    xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
-#    list_item = xbmcgui.ListItem(label = 'test')
-#    url = get_url(action='test')
-#    xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
+    # list_item = xbmcgui.ListItem(label = 'Přihlášení')
+    # url = get_url(action='login')
+    # xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
+    # list_item = xbmcgui.ListItem(label = 'test')
+    # url = get_url(action='test')
+    # xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
     xbmcplugin.endOfDirectory(_handle, cacheToDisc = False)
 
 check_config()
@@ -228,6 +222,7 @@ def router(paramstring):
             driver = init_driver(session = False)
             login(driver)
             driver.quit()
+            xbmcgui.Dialog().notification('Tipsport.cz', 'Přihlášení dokončeno', xbmcgui.NOTIFICATION_INFO, 5000)
         elif params['action'] == 'test':
             test()
         elif params['action'] == 'list_streams':
