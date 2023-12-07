@@ -1,6 +1,6 @@
 <h1>Tipsport.cz</h1>
 <p>
-<h3>Kodi doplňek pro Tipsport.cz</h3>
+<h3>Kodi doplněk pro Tipsport.cz</h3>
 <p>
 <h4>Doplněk je funkční v Kodi běžícím ve Windows a Linuxu s Intel/AMD procesory a je třeba mít nainstalovaný Google Chrome. Na ostatních zařízení s jiným OS nebo ARMovým procesorem je možné použít docker kontejner (funguje v CoreELEC/LibreELEC). Bohužel pro Android neexistují ani potřebný driver ani nativní možnost spuštění dockeru. Doplněk tam tedy nebude fungovat.</h4><br>
 
