@@ -105,7 +105,6 @@ def login(driver):
     addon = xbmcaddon.Addon()
     LOGIN_BUTTON1 = {'CZ' : 'Přihlásit', 'SK' : 'Prihlásiť'}
     LOGIN_BUTTON2 = {'CZ' : 'Přihlásit se', 'SK' : 'Prihlásiť sa'}
-    print('//button[text()=' + LOGIN_BUTTON1[addon.getSetting('tipsport_version')] + ']')    
 
     addon = xbmcaddon.Addon()
     driver.get(LOGIN_URL[addon.getSetting('tipsport_version')])
@@ -123,7 +122,6 @@ def login(driver):
     login_button.click()
 
     sleep(2)
-    print(driver.find_element(By.TAG_NAME, 'body').text)
 
     cookies = driver.get_cookies()
     data = json.dumps(cookies)
