@@ -123,6 +123,7 @@ def login(driver):
     login_button.click()
 
     sleep(2)
+    print(driver.find_element(By.TAG_NAME, 'body').text)
 
     cookies = driver.get_cookies()
     data = json.dumps(cookies)
