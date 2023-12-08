@@ -1,2 +1,6 @@
+v1.0.1 (8.12.2023)
+- možnost přepnout doplněk na Tipsport.sk
+- lze nastavit URL pro docker
+
 v1.0.0 (6.12.2023)
 - první verze

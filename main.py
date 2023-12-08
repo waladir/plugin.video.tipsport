@@ -18,11 +18,15 @@ from time import sleep
 import json
 from urllib.parse import parse_qsl,urlencode
 
+
 _url = sys.argv[0]
 if len(sys.argv) > 1:
     _handle = int(sys.argv[1])
+LOGIN_URL = {'CZ' : 'https://www.tipsport.cz/', 'SK' : 'https://www.tipsport.sk/'}
 
-LOGIN_URL = "https://www.tipsport.cz/"
+def get_url(**kwargs):
+    return '{0}?{1}'.format(_url, urlencode(kwargs))
+
 
 def check_config():
     addon = xbmcaddon.Addon()
@@ -30,8 +34,13 @@ def check_config():
         xbmcgui.Dialog().notification('Tipsport.cz', 'V nastavení je nutné mít vyplněné přihlašovací údaje', xbmcgui.NOTIFICATION_ERROR, 10000)
         sys.exit()
 
-def get_url(**kwargs):
-    return '{0}?{1}'.format(_url, urlencode(kwargs))
+
+def set_domain(url):
+    addon = xbmcaddon.Addon()
+    if addon.getSetting('tipsport_version') == 'SK':
+        return url.replace('.cz', '.sk')
+    else:
+        return url
 
 
 def init_driver(session = False):
@@ -50,15 +59,13 @@ def init_driver(session = False):
     options.add_argument('--user-agent=' + my_user_agent)
     caps = DesiredCapabilities().CHROME
     options.page_load_strategy = 'none'
-    caps["pageLoadStrategy"] = 'none'
-
-#    driver.implicitly_wait(15)
+    caps['pageLoadStrategy'] = 'none'
 
     if addon.getSetting('browser') == 'lokální Google Chrome':
         driverPath = str(get_driver_path('chromedriver'))
         driver = webdriver.Chrome(driverPath, options=options, desired_capabilities=caps)
-    else:
-        driver = webdriver.Remote(command_executor='http://127.0.0.1:4444/wd/hub', desired_capabilities=options.to_capabilities())
+    elif addon.getSetting('browser') == 'docker':
+        driver = webdriver.Remote(command_executor=addon.getSetting('docker_url'), desired_capabilities=options.to_capabilities())
     if session == True: 
         cookies = load_session()
         if cookies is None:
@@ -96,9 +103,14 @@ def api_call(url):
 
 def login(driver):
     addon = xbmcaddon.Addon()
-    driver.get(LOGIN_URL)
-    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, '//button[text()="Přihlásit"]')))
-    login_button = driver.find_element(By.XPATH, '//button[text()="Přihlásit"]')
+    LOGIN_BUTTON1 = {'CZ' : 'Přihlásit', 'SK' : 'Prihlásiť'}
+    LOGIN_BUTTON2 = {'CZ' : 'Přihlásit se', 'SK' : 'Prihlásiť sa'}
+    print('//button[text()=' + LOGIN_BUTTON1[addon.getSetting('tipsport_version')] + ']')    
+
+    addon = xbmcaddon.Addon()
+    driver.get(LOGIN_URL[addon.getSetting('tipsport_version')])
+    WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, '//button[text()="' + LOGIN_BUTTON1[addon.getSetting('tipsport_version')] + '"]')))
+    login_button = driver.find_element(By.XPATH, '//button[text()="' + LOGIN_BUTTON1[addon.getSetting('tipsport_version')] + '"]')
     login_button.click()
 
     WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.NAME, 'username')))
@@ -107,7 +119,7 @@ def login(driver):
     password = driver.find_element(By.NAME, 'password')
     password.send_keys(addon.getSetting('password'))
 
-    login_button = driver.find_element(By.XPATH, '//button[text()="Přihlásit se"]')
+    login_button = driver.find_element(By.XPATH, '//button[text()="' + LOGIN_BUTTON2[addon.getSetting('tipsport_version')] + '"]')
     login_button.click()
 
     sleep(2)
@@ -145,15 +157,8 @@ def load_session():
     return data
 
 
-def test():
-    driver = init_driver(page_loading_strategy = 'none', session = True)
-    driver.get('https://www.tipsport.cz/rest/offer/v2/live/matches/5427118/stream?deviceType=DESKTOP')
-    print(driver.find_element(By.TAG_NAME, 'body').text)
-    driver.quit()
-
-
 def play_stream(id, title):
-    data = api_call('https://www.tipsport.cz/rest/offer/v2/live/matches/' + str(id) + '/stream?deviceType=DESKTOP')
+    data = api_call(set_domain('https://www.tipsport.cz/rest/offer/v2/live/matches/' + str(id) + '/stream?deviceType=DESKTOP'))
     if 'data' in data:
         if 'http' in data['data']:
             list_item = xbmcgui.ListItem(path = data['data'])
@@ -167,7 +172,7 @@ def play_stream(id, title):
 
 def list_streams(id, label):
     xbmcplugin.setPluginCategory(_handle, label)
-    data = api_call('https://www.tipsport.cz/rest/articles/v1/tv/program?day=0&articleId=')
+    data = api_call(set_domain('https://www.tipsport.cz/rest/articles/v1/tv/program?day=0&articleId='))
     if 'program' in data:
         for sport in data['program']:
             if sport['id'] == int(id):
@@ -188,7 +193,7 @@ def list_streams(id, label):
 
 
 def list_sports():
-    data = api_call('https://www.tipsport.cz/rest/articles/v1/tv/program?day=0&articleId=')
+    data = api_call(set_domain('https://www.tipsport.cz/rest/articles/v1/tv/program?day=0&articleId='))
     if 'program' in data:
         for sport in data['program']:
             cnt = 0
@@ -206,13 +211,8 @@ def list_sports():
 
 def list_menu():
     list_sports()
-    # list_item = xbmcgui.ListItem(label = 'Přihlášení')
-    # url = get_url(action='login')
-    # xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
-    # list_item = xbmcgui.ListItem(label = 'test')
-    # url = get_url(action='test')
-    # xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
     xbmcplugin.endOfDirectory(_handle, cacheToDisc = False)
+
 
 check_config()
 def router(paramstring):

@@ -1,4 +1,4 @@
-﻿<addon id="plugin.video.tipsport" name="Tipsport.cz" provider-name="waladir" version="1.0.0">
+﻿<addon id="plugin.video.tipsport" name="Tipsport.cz" provider-name="waladir" version="1.0.1">
   <requires>
     <import addon="xbmc.python" version="3.0.0"/>
     <import addon="script.module.selenium"/>
@@ -18,6 +18,10 @@ Informace o zprovoznění doplňku najdete na https://github.com/waladir/plugin.
     <platform>all</platform>
     <source>https://github.com/waladir/plugin.video.tipsport</source>
     <news>
+v1.0.1 (8.12.2023)
+- možnost přepnout doplněk na Tipsport.sk
+- lze nastavit URL pro docker
+
 v1.0.0 (6.12.2023)
 - první verze
     </news>
