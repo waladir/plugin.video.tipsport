@@ -55,6 +55,8 @@ def init_driver(session = False):
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--remote-debugging-port=9222')
+#    options.add_argument('--blink-settings=imagesEnabled=false')
+#    options.add_argument('--host-resolver-rules=MAP *.pilling.com 127.0.0.1, MAP *.twitter.com 127.0.0.1, MAP *.ads-twitter.com 127.0.0.1, MAP *.smartlook.com 127.0.0.1, MAP *.doubleclick.net 127.0.0.1, MAP *.adform.net 127.0.0.1, MAP *.t.co 127.0.0.1, MAP *.googletagmanager.com 127.0.0.1')
     options.add_argument('--no-proxy-server')
     options.add_argument('--user-agent=' + my_user_agent)
     caps = DesiredCapabilities().CHROME
@@ -102,9 +104,11 @@ def api_call(url):
 
 
 def login(driver):
+    success = True
     addon = xbmcaddon.Addon()
     LOGIN_BUTTON1 = {'CZ' : 'Přihlásit', 'SK' : 'Prihlásiť'}
     LOGIN_BUTTON2 = {'CZ' : 'Přihlásit se', 'SK' : 'Prihlásiť sa'}
+    LOGIN_VERIFICATION = {'CZ' : 'Vložit peníze', 'SK' : 'Vložiť peniaze'}
 
     addon = xbmcaddon.Addon()
     driver.get(LOGIN_URL[addon.getSetting('tipsport_version')])
@@ -120,13 +124,15 @@ def login(driver):
 
     login_button = driver.find_element(By.XPATH, '//button[text()="' + LOGIN_BUTTON2[addon.getSetting('tipsport_version')] + '"]')
     login_button.click()
-
-    sleep(2)
-
+    try:
+        WebDriverWait(driver, 3).until(EC.visibility_of_element_located((By.XPATH, '//a[text()="' + LOGIN_VERIFICATION[addon.getSetting('tipsport_version')] + '"]')))
+    except Exception as e:
+        xbmcgui.Dialog().notification('Tipsport.cz', 'Došlo k chybě při přihlášení', xbmcgui.NOTIFICATION_ERROR, 5000)
+        success = False
     cookies = driver.get_cookies()
     data = json.dumps(cookies)
     save_session(data)
-    return data
+    return success
 
 
 def save_session(data):
@@ -219,9 +225,10 @@ def router(paramstring):
     if params:
         if params['action'] == 'login':
             driver = init_driver(session = False)
-            login(driver)
+            success = login(driver)
             driver.quit()
-            xbmcgui.Dialog().notification('Tipsport.cz', 'Přihlášení dokončeno', xbmcgui.NOTIFICATION_INFO, 5000)
+            if success == True:
+                xbmcgui.Dialog().notification('Tipsport.cz', 'Přihlášení dokončeno', xbmcgui.NOTIFICATION_INFO, 5000)
         elif params['action'] == 'test':
             test()
         elif params['action'] == 'list_streams':
