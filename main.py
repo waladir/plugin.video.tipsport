@@ -47,7 +47,7 @@ def init_driver(session = False):
     addon = xbmcaddon.Addon()
     options = Options()
     my_user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
-    options.add_argument('--headless=new')
+#    options.add_argument('--headless=new')
     options.add_argument('--start-maximized')
     options.add_argument('--window-size=1200,800')
     options.add_argument('--disable-gpu')
@@ -121,7 +121,7 @@ def login(driver):
     login_button = driver.find_element(By.XPATH, '//button[text()="' + LOGIN_BUTTON2[addon.getSetting('tipsport_version')] + '"]')
     login_button.click()
 
-    sleep(2)
+    sleep(120)
 
     cookies = driver.get_cookies()
     data = json.dumps(cookies)
