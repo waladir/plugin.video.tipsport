@@ -2,7 +2,7 @@
 <p>
 <h3>Kodi doplněk pro Tipsport.cz</h3>
 <p>
-<h4>Doplněk je funkční v Kodi běžícím ve Windows a Linuxu s Intel/AMD procesory a je třeba mít nainstalovaný Google Chrome. Na ostatních zařízení s jiným OS nebo ARMovým procesorem je možné použít docker kontejner (funguje v CoreELEC/LibreELEC). Bohužel pro Android neexistují ani potřebný driver ani nativní možnost spuštění dockeru. Doplněk tam tedy nebude fungovat.</h4><br>
+Doplněk je funkční v Kodi běžícím ve Windows a Linuxu s Intel/AMD procesorem a vyžaduje mít nainstalovaný Google Chrome. Na ostatních zařízení s jiným OS nebo ARMovým procesorem je možné použít docker kontejner (funguje v CoreELEC/LibreELEC). Bohužel pro Android neexistují ani potřebný driver ani nativní možnost spuštění dockeru. Je možné využít vzdáleně běžící docker, ale toto řešení doporučuju jen v případě, že víte co děláte.<br>
 
 <h3>Postup instalace</h3><br>
 Stáhněte a nainstalujte <a href="https://codeload.github.com/waladir/script.module.selenium/zip/refs/heads/master">doplněk selenium</a> a samotný <a href="https://codeload.github.com/waladir/plugin.video.tipsport/zip/refs/heads/master">Tipsport.cz</a>
