@@ -1,4 +1,4 @@
-﻿<addon id="plugin.video.tipsport" name="Tipsport.cz" provider-name="waladir" version="1.0.1">
+﻿<addon id="plugin.video.tipsport" name="Tipsport.cz" provider-name="waladir" version="1.0.2">
   <requires>
     <import addon="xbmc.python" version="3.0.0"/>
     <import addon="script.module.selenium"/>
