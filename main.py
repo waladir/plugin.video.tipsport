@@ -76,7 +76,7 @@ def init_driver(session = False):
         if cookies is None:
             login(driver)
             cookies = load_session()
-        driver.get('https://www.tipsport.cz/rest/')
+        driver.get(set_domain('https://www.tipsport.cz/rest/'))
         for cookie in cookies:
             driver.add_cookie(cookie)
     return driver
