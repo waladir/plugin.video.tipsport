@@ -167,6 +167,7 @@ def load_session():
 
 def play_stream(id, title):
     data = api_call(set_domain('https://www.tipsport.cz/rest/offer/v2/live/matches/' + str(id) + '/stream?deviceType=DESKTOP'))
+    print(data)
     if 'data' in data:
         if 'http' in data['data']:
             if data['type'] == 'URL_IMG':
@@ -185,6 +186,25 @@ def play_stream(id, title):
                 except HTTPError as e:
                     xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při spuštení streamu', xbmcgui.NOTIFICATION_ERROR, 5000)
                     return
+            elif data['type'] == 'URL_TVCOM':
+                headers = {'User-Agent' : user_agent, 'Accept' : '*/*', 'Content-type' : 'application/json;charset=UTF-8'}
+                request = Request(url = data['data'], headers = headers)
+                try:
+                    response = urlopen(request)
+                    html = response.read()
+                    if html and len(html) > 0:
+                        data = json.loads(html)
+                        if 'url' not in data or 'hls' not in data['url']:
+                            xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při spuštení streamu', xbmcgui.NOTIFICATION_ERROR, 5000)
+                            return
+                        else:
+                            url = data['url']['hls']['url']
+                except HTTPError as e:
+                    xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při spuštení streamu', xbmcgui.NOTIFICATION_ERROR, 5000)
+                    return
+            elif 'URL' in data['type']:
+                xbmcgui.Dialog().notification('Tipsport.cz', 'Nepodporovaný typ stremu: ' + data['type'], xbmcgui.NOTIFICATION_ERROR, 5000)
+                return
             else:
                 url = data['data'].replace('|', '%7C')                
             list_item = xbmcgui.ListItem(path = url)
@@ -206,7 +226,6 @@ def list_streams(id, label):
                     if len(item) > 0:
                         for i in range(len(item)):
                             if item[i]['live'] == True:
-                                print(item[i])
                                 list_item = xbmcgui.ListItem(label = item[i]['name'] + '\n' + '[COLOR=gray]' + item[i]['sport'] + ' / ' + item[i]['competition'] + '[/COLOR]')
                                 list_item.setInfo('video', {'mediatype':'movie', 'title': item[i]['name']})
                                 list_item.setContentLookup(False)
@@ -214,6 +233,7 @@ def list_streams(id, label):
                                 url = get_url(action = 'play_stream', id = item[i]['id'], title = item[i]['name'])
                                 xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     else:
+        print(data)
         xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při načtení streamů', xbmcgui.NOTIFICATION_ERROR, 5000)
     xbmcplugin.endOfDirectory(_handle, cacheToDisc = False)
 
