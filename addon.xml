@@ -18,6 +18,9 @@ Informace o zprovoznění doplňku najdete na https://github.com/waladir/plugin.
     <platform>all</platform>
     <source>https://github.com/waladir/plugin.video.tipsport</source>
     <news>
+v1.0.2 (9.12.2023)
+- ošetření přehrávání některých typů streamů      
+
 v1.0.1 (8.12.2023)
 - možnost přepnout doplněk na Tipsport.sk
 - lze nastavit URL pro docker

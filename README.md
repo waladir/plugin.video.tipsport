@@ -26,6 +26,9 @@ docker start selenium-chrome
 
 V nastavení doplňku vyplňte jako Prohlížeč docker.<br><br>
 
+v1.0.2 (9.12.2023)<br>
+- ošetření přehrávání některých typů streamů<br><br>
+
 v1.0.1 (8.12.2023)<br>
 - možnost přepnout doplněk na Tipsport.sk<br>
 - lze nastavit URL pro docker<br><br>

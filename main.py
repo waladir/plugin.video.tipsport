@@ -14,15 +14,16 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.driver_utils import get_driver_path
 
-from time import sleep
 import json
 from urllib.parse import parse_qsl,urlencode
-
+from urllib.request import urlopen, Request
+from urllib.error import HTTPError
 
 _url = sys.argv[0]
 if len(sys.argv) > 1:
     _handle = int(sys.argv[1])
 LOGIN_URL = {'CZ' : 'https://www.tipsport.cz/', 'SK' : 'https://www.tipsport.sk/'}
+user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
 
 def get_url(**kwargs):
     return '{0}?{1}'.format(_url, urlencode(kwargs))
@@ -46,7 +47,6 @@ def set_domain(url):
 def init_driver(session = False):
     addon = xbmcaddon.Addon()
     options = Options()
-    my_user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
     options.add_argument('--headless=new')
     options.add_argument('--start-maximized')
     options.add_argument('--window-size=1200,800')
@@ -55,19 +55,22 @@ def init_driver(session = False):
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--remote-debugging-port=9222')
-#    options.add_argument('--blink-settings=imagesEnabled=false')
-#    options.add_argument('--host-resolver-rules=MAP *.pilling.com 127.0.0.1, MAP *.twitter.com 127.0.0.1, MAP *.ads-twitter.com 127.0.0.1, MAP *.smartlook.com 127.0.0.1, MAP *.doubleclick.net 127.0.0.1, MAP *.adform.net 127.0.0.1, MAP *.t.co 127.0.0.1, MAP *.googletagmanager.com 127.0.0.1')
+    # options.add_argument('--blink-settings=imagesEnabled=false')
+    # options.add_argument('--host-resolver-rules=MAP *.pilling.com 127.0.0.1, MAP *.casinomodule.com, MAP *.twitter.com 127.0.0.1, MAP *.ads-twitter.com 127.0.0.1, MAP *.smartlook.com 127.0.0.1, MAP *.doubleclick.net 127.0.0.1, MAP *.adform.net 127.0.0.1, MAP *.t.co 127.0.0.1, MAP *.googletagmanager.com 127.0.0.1')
     options.add_argument('--no-proxy-server')
-    options.add_argument('--user-agent=' + my_user_agent)
+    options.add_argument('--user-agent=' + user_agent)
     caps = DesiredCapabilities().CHROME
     options.page_load_strategy = 'none'
     caps['pageLoadStrategy'] = 'none'
-
-    if addon.getSetting('browser') == 'lokální Google Chrome':
-        driverPath = str(get_driver_path('chromedriver'))
-        driver = webdriver.Chrome(driverPath, options=options, desired_capabilities=caps)
-    elif addon.getSetting('browser') == 'docker':
-        driver = webdriver.Remote(command_executor=addon.getSetting('docker_url'), desired_capabilities=options.to_capabilities())
+    try:
+        if addon.getSetting('browser') == 'lokální Google Chrome':
+            driverPath = str(get_driver_path('chromedriver'))
+            driver = webdriver.Chrome(driverPath, options=options, desired_capabilities=caps)
+        elif addon.getSetting('browser') == 'docker':
+            driver = webdriver.Remote(command_executor=addon.getSetting('docker_url'), desired_capabilities=options.to_capabilities())
+    except Exception as e:
+        xbmcgui.Dialog().notification('Tipsport.cz', 'Problém při volaní prohlížeče. Pokud doplněk předtím fungoval, zkuste restartovat zařízení', xbmcgui.NOTIFICATION_ERROR, 10000)        
+        sys.exit()
     if session == True: 
         cookies = load_session()
         if cookies is None:
@@ -166,7 +169,25 @@ def play_stream(id, title):
     data = api_call(set_domain('https://www.tipsport.cz/rest/offer/v2/live/matches/' + str(id) + '/stream?deviceType=DESKTOP'))
     if 'data' in data:
         if 'http' in data['data']:
-            list_item = xbmcgui.ListItem(path = data['data'])
+            if data['type'] == 'URL_IMG':
+                headers = {'User-Agent' : user_agent, 'Accept' : '*/*', 'Content-type' : 'application/json;charset=UTF-8'}
+                request = Request(url = data['data'], headers = headers)
+                try:
+                    response = urlopen(request)
+                    html = response.read()
+                    if html and len(html) > 0:
+                        data = json.loads(html)
+                        if 'hlsUrl' not in data:
+                            xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při spuštení streamu', xbmcgui.NOTIFICATION_ERROR, 5000)
+                            return
+                        else:
+                            url = data['hlsUrl']
+                except HTTPError as e:
+                    xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při spuštení streamu', xbmcgui.NOTIFICATION_ERROR, 5000)
+                    return
+            else:
+                url = data['data'].replace('|', '%7C')                
+            list_item = xbmcgui.ListItem(path = url)
             list_item.setContentLookup(False)       
             xbmcplugin.setResolvedUrl(_handle, True, list_item)
         else:
@@ -229,8 +250,6 @@ def router(paramstring):
             driver.quit()
             if success == True:
                 xbmcgui.Dialog().notification('Tipsport.cz', 'Přihlášení dokončeno', xbmcgui.NOTIFICATION_INFO, 5000)
-        elif params['action'] == 'test':
-            test()
         elif params['action'] == 'list_streams':
             list_streams(params['id'], params['label'])
         elif params['action'] == 'play_stream':
