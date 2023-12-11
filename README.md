@@ -35,7 +35,8 @@ Selenium Grid lze pustit i na jiném počítači a doplněk k němu může přis
 <pre>java -jar selenium-server-<verze>.jar standalone --selenium-manager true</pre>
 - v nastavení doplňku vyberte v Prohlížeč Selenium Grid a v Selenium Grid URL http://<adresa nebo jméno počítače s běžícím Selenium Grid>:4444/wd/hub<br><br>
 
-<br><hr><br>
+<hr>
+
 v1.0.3 (11.12.2023)<br>
 - možnost přidat sporty nebo soutěže na blacklist<br>
 - kontrola nastavení prohlížeče<br>
