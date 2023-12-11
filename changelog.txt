@@ -1,3 +1,8 @@
+v1.0.3 (11.12.2023)
+- možnost přidat sporty nebo soutěže na blacklist
+- kontrola nastavení prohlížeče
+- změna popisu položek v nastavení
+
 v1.0.2 (9.12.2023)
 - ošetření přehrávání některých typů streamů
 
