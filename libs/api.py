@@ -11,6 +11,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.driver_utils import get_driver_path
 
+from urllib.parse import unquote
+import requests
 import json
 
 from libs.session import login, load_session
@@ -23,7 +25,7 @@ def set_domain(url):
     else:
         return url
 
-def init_driver(session = False):
+def init_driver():
     addon = xbmcaddon.Addon()
     options = Options()
     options.add_argument('--headless=new')
@@ -51,38 +53,48 @@ def init_driver(session = False):
     except Exception as e:
         xbmcgui.Dialog().notification('Tipsport.cz', 'Problém při volaní prohlížeče. Pokud doplněk předtím fungoval, zkuste restartovat zařízení', xbmcgui.NOTIFICATION_ERROR, 10000)        
         sys.exit()
-    if session == True: 
-        cookies = load_session()
-        if cookies is None:
-            login(driver)
-            cookies = load_session()
-        driver.get(set_domain('https://www.tipsport.cz/rest/'))
-        for cookie in cookies:
-            driver.add_cookie(cookie)
     return driver
 
 def api_call(url):
-    data = {}
-    try:
-        driver = init_driver(session = True)
-        driver.get(url)
-        WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.TAG_NAME, 'body')))
-        print(driver.find_element(By.TAG_NAME, 'body').text)        
-        data = json.loads(driver.find_element(By.TAG_NAME, 'body').text)
-    except Exception as e:
-        pass
-    if 'errorCode' in data:
-        try:
-            login(driver)
-            driver.get(url)
-            WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.TAG_NAME, 'body')))
-            print(driver.find_element(By.TAG_NAME, 'body').text)        
-            data = json.loads(driver.find_element(By.TAG_NAME, 'body').text)
-        except Exception as e:
-            pass
-    try:
-        driver.quit()
-    except Exception as e:
-        xbmcgui.Dialog().notification('Tipsport.cz', 'Došlo k chybě při volání prohlížeče', xbmcgui.NOTIFICATION_ERROR, 5000)
+    requests_cookies = {}
+    cookies = load_session()
+    s = requests.Session()    
+    for cookie in cookies:
+        if 'httpOnly' in cookie:
+            httpO = cookie.pop('httpOnly')
+            cookie['rest'] = {'httpOnly': httpO}
+        if 'expiry' in cookie:
+            cookie['expires'] = cookie.pop('expiry')
+        cookie.pop('sameSite')
+        s.cookies.set(**cookie)
+        requests_cookies[cookie['name']] = unquote(cookie['value'])
+
+    headers = {'User-Agent' : user_agent, 'Accept' : '*/*', 'Content-type' : 'application/json;charset=UTF-8', 'DNT' : '1', 'Host' : 'www.tipsport.cz', 'Referer' : 'https://www.tipsport.cz/tv', 'Sec-Fetch-Dest' : 'empty', 'Sec-Fetch-Mode' : 'cors', 'Sec-Fetch-Site' : 'same-origin'} 
+    r = s.get(url = url, headers = headers)
+    print(r.text)
+    data = json.loads(r.text)
     return data
 
+def get_session():
+    cookies = load_session()
+    if cookies is None:
+        login()
+    session = requests.Session()
+    for cookie in cookies:
+        if cookie['name'] != '':
+            session.cookies.set(cookie['name'], cookie['value'], domain=cookie['domain'])
+    return session
+
+def api_call(url):
+    headers = {'User-Agent' : user_agent, 'Content-Type' : 'application/json'}
+    data = {}
+    session = get_session()
+    data = session.get(url = url, headers = headers).json()
+    print(data)
+    if 'errorCode' in data:
+        login()
+        session.close()
+        session = get_session()
+        data = session.get(url = url, headers = headers).json()
+        print(data)
+    return data

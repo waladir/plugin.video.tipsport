@@ -12,7 +12,9 @@ import json
 
 LOGIN_URL = {'CZ' : 'https://www.tipsport.cz/', 'SK' : 'https://www.tipsport.sk/'}
 
-def login(driver):
+def login():
+    from libs.api import init_driver
+    driver = init_driver()
     success = True
     addon = xbmcaddon.Addon()
     LOGIN_BUTTON1 = {'CZ' : 'Přihlásit', 'SK' : 'Prihlásiť'}
@@ -41,6 +43,10 @@ def login(driver):
     cookies = driver.get_cookies()
     data = json.dumps(cookies)
     save_session(data)
+    try:
+        driver.quit()
+    except Exception as e:
+        xbmcgui.Dialog().notification('Tipsport.cz', 'Došlo k chybě při volání prohlížeče', xbmcgui.NOTIFICATION_ERROR, 5000)
     return success
 
 def save_session(data):

@@ -83,9 +83,7 @@ def router(paramstring):
     params = dict(parse_qsl(paramstring))
     if params:
         if params['action'] == 'login':
-            driver = init_driver(session = False)
-            success = login(driver)
-            driver.quit()
+            success = login()
             if success == True:
                 xbmcgui.Dialog().notification('Tipsport.cz', 'Přihlášení dokončeno', xbmcgui.NOTIFICATION_INFO, 5000)
         elif params['action'] == 'list_streams':

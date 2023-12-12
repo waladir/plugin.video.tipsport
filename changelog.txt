@@ -1,3 +1,6 @@
+v1.0.4 (12.12.2023)
+- úprava volaní REST API
+
 v1.0.3 (11.12.2023)
 - možnost přidat sporty nebo soutěže na blacklist
 - kontrola nastavení prohlížeče
