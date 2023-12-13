@@ -35,7 +35,17 @@ Selenium Grid lze pustit i na jiném počítači a doplněk k němu může přis
 <pre>java -jar selenium-server-<verze>.jar standalone --selenium-manager true</pre>
 - v nastavení doplňku vyberte v Prohlížeč Selenium Grid a v Selenium Grid URL http://<adresa nebo jméno počítače s běžícím Selenium Grid>:4444/wd/hub<br><br>
 
+<h4>Zadáním JSESSIONID přes webový formulář</h4>
+Tento způsob nahrazuje přihlášení a při jeho použití není třeba volání žádného prohlížeče z dopňku.<br>
+
+- v nastavení dopňku vyberte v Prohlížeč zadání přes web<br>
+- v prohlížeči otevřete stránku z formulářem pro zadání JSESSIONID - http://&lt;adresa stroje s Kodi&gt;:8089/<br>
+- na stránce zadejte podle postupu hodnotu JSESSIONID<br><br>
+
 <hr>
+v1.1.0 (13.12.2023)<br>
+- možnost nahradit příhlášení  k Tipsportu zadáním hodnoty JSESSIONID přes webový formulář<br><br>
+
 v1.0.5 (13.12.2023)<br>
 - přidání služby, která prodlužuje platnost sessiony<br>
 - úprava logování<br><br>

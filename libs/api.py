@@ -48,7 +48,6 @@ def init_driver():
             driver = webdriver.Chrome(driverPath, options=options, desired_capabilities=caps)
         elif addon.getSetting('browser') == 'Selenium Grid':
             driver = webdriver.Remote(command_executor=addon.getSetting('docker_url'), desired_capabilities=options.to_capabilities())
-
     except Exception as e:
         xbmcgui.Dialog().notification('Tipsport.cz', 'Problém při volaní prohlížeče. Pokud doplněk předtím fungoval, zkuste restartovat zařízení', xbmcgui.NOTIFICATION_ERROR, 10000)        
         sys.exit()
@@ -73,14 +72,13 @@ def make_request(url, method, session):
     return data
 
 def api_call(url, method = 'GET', nolog = False, novalidate = False):
-    headers = {'User-Agent' : user_agent, 'Content-Type' : 'application/json'}
     data = {}
     session = get_session()
     data = make_request(url = url, method = method, session = session).json()
     xbmc.log('Tipsport.cz > ' + str(url))
     if nolog == False or 'errorCode' in data:
         xbmc.log('Tipsport.cz > ' + str(data))
-    if 'errorCode' in data and novalidate == True:
+    if 'errorCode' in data and novalidate == False:
         login()
         session.close()
         session = get_session()

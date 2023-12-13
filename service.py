@@ -1,15 +1,24 @@
 # -*- coding: utf-8 -*-
-import sys
 import xbmcaddon
 import xbmc
 
 import time
+import threading
 
 from libs.api import api_call, set_domain
+import web
 
 addon = xbmcaddon.Addon()
 
-time.sleep(60)
+class BottleThreadClass(threading.Thread):
+    def run(self):
+        web.start_server()
+
+time.sleep(10)
+bt = BottleThreadClass()
+bt.start()
+
+time.sleep(50)
 interval = 60
 next = time.time() + float(interval)
 
