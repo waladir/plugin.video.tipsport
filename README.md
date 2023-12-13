@@ -36,6 +36,10 @@ Selenium Grid lze pustit i na jiném počítači a doplněk k němu může přis
 - v nastavení doplňku vyberte v Prohlížeč Selenium Grid a v Selenium Grid URL http://<adresa nebo jméno počítače s běžícím Selenium Grid>:4444/wd/hub<br><br>
 
 <hr>
+v1.0.5 (13.12.2023)<br>
+- přidání služby, která prodlužuje platnost sessiony<br>
+- úprava logování<br><br>
+
 v1.0.4 (12.12.2023)<br>
 - úprava volaní REST API<br><br>
 
@@ -50,7 +54,4 @@ v1.0.2 (9.12.2023)<br>
 v1.0.1 (8.12.2023)<br>
 - možnost přepnout doplněk na Tipsport.sk<br>
 - lze nastavit URL pro docker<br><br>
-
-v1.0.0 (6.12.2023)<br>
-- první verze<br><br>
 </p>

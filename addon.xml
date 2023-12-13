@@ -1,4 +1,4 @@
-﻿<addon id="plugin.video.tipsport" name="Tipsport.cz" provider-name="waladir" version="1.0.4">
+﻿<addon id="plugin.video.tipsport" name="Tipsport.cz" provider-name="waladir" version="1.0.5">
   <requires>
     <import addon="xbmc.python" version="3.0.0"/>
     <import addon="script.module.selenium"/>
@@ -6,11 +6,11 @@
     <import addon="script.module.certifi"/>
     <import addon="script.module.urllib3"/>    
     <import addon="script.module.requests"/>    
-
   </requires>
   <extension library="main.py" point="xbmc.python.pluginsource">
     <provides>video</provides>
   </extension>
+  <extension library="service.py" point="xbmc.service"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="cs_CZ">Tipsport.cz</summary>
     <description lang="cs_CZ">
@@ -20,6 +20,10 @@ Informace o zprovoznění doplňku najdete na https://xbmc-kodi.cz/prispevek-tip
     <platform>all</platform>
     <source>https://github.com/waladir/plugin.video.tipsport</source>
     <news>
+v1.0.5 (13.12.2023)
+- přidání služby, která prodlužuje platnost sessiony
+- úprava logování
+
 v1.0.4 (12.12.2023)
 - úprava volaní REST API
       
@@ -34,9 +38,6 @@ v1.0.2 (9.12.2023)
 v1.0.1 (8.12.2023)
 - možnost přepnout doplněk na Tipsport.sk
 - lze nastavit URL pro docker
-
-v1.0.0 (6.12.2023)
-- první verze
     </news>
     <assets>
         <icon>icon.png</icon>

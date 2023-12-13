@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
+import xbmc
 import xbmcaddon
 import xbmcgui
 
@@ -36,8 +37,6 @@ def init_driver():
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--remote-debugging-port=9222')
-    # options.add_argument('--blink-settings=imagesEnabled=false')
-    # options.add_argument('--host-resolver-rules=MAP *.pilling.com 127.0.0.1, MAP *.casinomodule.com, MAP *.twitter.com 127.0.0.1, MAP *.ads-twitter.com 127.0.0.1, MAP *.smartlook.com 127.0.0.1, MAP *.doubleclick.net 127.0.0.1, MAP *.adform.net 127.0.0.1, MAP *.t.co 127.0.0.1, MAP *.googletagmanager.com 127.0.0.1')
     options.add_argument('--no-proxy-server')
     options.add_argument('--user-agent=' + user_agent)
     caps = DesiredCapabilities().CHROME
@@ -55,46 +54,38 @@ def init_driver():
         sys.exit()
     return driver
 
-def api_call(url):
-    requests_cookies = {}
-    cookies = load_session()
-    s = requests.Session()    
-    for cookie in cookies:
-        if 'httpOnly' in cookie:
-            httpO = cookie.pop('httpOnly')
-            cookie['rest'] = {'httpOnly': httpO}
-        if 'expiry' in cookie:
-            cookie['expires'] = cookie.pop('expiry')
-        cookie.pop('sameSite')
-        s.cookies.set(**cookie)
-        requests_cookies[cookie['name']] = unquote(cookie['value'])
-
-    headers = {'User-Agent' : user_agent, 'Accept' : '*/*', 'Content-type' : 'application/json;charset=UTF-8', 'DNT' : '1', 'Host' : 'www.tipsport.cz', 'Referer' : 'https://www.tipsport.cz/tv', 'Sec-Fetch-Dest' : 'empty', 'Sec-Fetch-Mode' : 'cors', 'Sec-Fetch-Site' : 'same-origin'} 
-    r = s.get(url = url, headers = headers)
-    print(r.text)
-    data = json.loads(r.text)
-    return data
-
 def get_session():
     cookies = load_session()
     if cookies is None:
         login()
     session = requests.Session()
     for cookie in cookies:
-        if cookie['name'] != '':
+        if cookie['name'] == 'JSESSIONID':
             session.cookies.set(cookie['name'], cookie['value'], domain=cookie['domain'])
     return session
 
-def api_call(url):
+def make_request(url, method, session):
+    headers = {'User-Agent' : user_agent, 'Content-Type' : 'application/json'}
+    if method == 'GET':
+        data = session.get(url = url, headers = headers)
+    elif method == 'PUT':
+        data = session.put(url = url, headers = headers)
+    return data
+
+def api_call(url, method = 'GET', nolog = False, novalidate = False):
     headers = {'User-Agent' : user_agent, 'Content-Type' : 'application/json'}
     data = {}
     session = get_session()
-    data = session.get(url = url, headers = headers).json()
-    print(data)
-    if 'errorCode' in data:
+    data = make_request(url = url, method = method, session = session).json()
+    xbmc.log('Tipsport.cz > ' + str(url))
+    if nolog == False or 'errorCode' in data:
+        xbmc.log('Tipsport.cz > ' + str(data))
+    if 'errorCode' in data and novalidate == True:
         login()
         session.close()
         session = get_session()
-        data = session.get(url = url, headers = headers).json()
-        print(data)
+        data = make_request(url = url, method = method, session = session).json()
+        xbmc.log('Tipsport.cz > ' + str(url))
+        if nolog == False or 'errorCode' in data:
+            xbmc.log('Tipsport.cz > ' + str(data))
     return data

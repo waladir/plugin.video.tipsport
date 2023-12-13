@@ -1,3 +1,7 @@
+v1.0.5 (13.12.2023)
+- přidání služby, která prodlužuje platnost sessiony
+- úprava logování
+
 v1.0.4 (12.12.2023)
 - úprava volaní REST API
 
@@ -12,6 +16,3 @@ v1.0.2 (9.12.2023)
 v1.0.1 (8.12.2023)
 - možnost přepnout doplněk na Tipsport.sk
 - lze nastavit URL pro docker
-
-v1.0.0 (6.12.2023)
-- první verze

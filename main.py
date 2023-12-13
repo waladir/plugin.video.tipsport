@@ -20,7 +20,7 @@ if len(sys.argv) > 1:
     _handle = int(sys.argv[1])
 
 def play_stream(id, title):
-    data = api_call(set_domain('https://www.tipsport.cz/rest/offer/v2/live/matches/' + str(id) + '/stream?deviceType=DESKTOP'))
+    data = api_call(url = set_domain('https://www.tipsport.cz/rest/offer/v2/live/matches/' + str(id) + '/stream?deviceType=DESKTOP'))
     if 'data' in data:
         if 'http' in data['data']:
             if data['type'] == 'URL_IMG':

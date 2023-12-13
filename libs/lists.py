@@ -13,7 +13,8 @@ if len(sys.argv) > 1:
 def list_streams(id, label):
     xbmcplugin.setPluginCategory(_handle, label)
     blacklist = load_blacklist()
-    data = api_call(set_domain('https://www.tipsport.cz/rest/articles/v1/tv/program?day=0&articleId='))
+    api_call(set_domain('https://www.tipsport.cz/rest/client/restrictions/v1/login/duration'), method = 'PUT')
+    data = api_call(url = set_domain('https://www.tipsport.cz/rest/articles/v1/tv/program?day=0&articleId='), nolog = True)
     if 'program' in data:
         for sport in data['program']:
             if sport['id'] == int(id):
@@ -36,7 +37,7 @@ def list_streams(id, label):
 
 def list_sports():
     blacklist = load_blacklist()
-    data = api_call(set_domain('https://www.tipsport.cz/rest/articles/v1/tv/program?day=0&articleId='))
+    data = api_call(url = set_domain('https://www.tipsport.cz/rest/articles/v1/tv/program?day=0&articleId='), nolog = True)
     if 'program' in data:
         for sport in data['program']:
             cnt = 0
