@@ -20,6 +20,6 @@
        <li>Vývojářskou konzoli dalším stiskem klávesy F12 zavřete a můžete zavřít i stránku Tipsportu.</li>
        <li>Hodnotu JSESSIONID vložte do formuláře na stránce a klikněte na tlačítko Uložit. Stránku můžete zavřít.</li>
     </ul>
-    <center><img src="/img/screen.png"></center>
+    <center><img src="/img/screen.jpg"></center>
   </body>
 </html>
