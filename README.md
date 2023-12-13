@@ -36,7 +36,7 @@ Selenium Grid lze pustit i na jiném počítači a doplněk k němu může přis
 - v nastavení doplňku vyberte v Prohlížeč Selenium Grid a v Selenium Grid URL http://<adresa nebo jméno počítače s běžícím Selenium Grid>:4444/wd/hub<br><br>
 
 <h4>Zadáním JSESSIONID přes webový formulář</h4>
-Tento způsob nahrazuje přihlášení a při jeho použití není třeba volání žádného prohlížeče z dopňku.<br>
+Tento způsob nahrazuje přihlášení a při jeho použití není třeba volání žádného prohlížeče z doplňku.<br>
 
 - v nastavení dopňku vyberte v Prohlížeč zadání přes web<br>
 - v prohlížeči otevřete stránku z formulářem pro zadání JSESSIONID - http://&lt;adresa stroje s Kodi&gt;:8089/<br>
