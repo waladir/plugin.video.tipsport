@@ -43,6 +43,9 @@ Tento způsob nahrazuje přihlášení a při jeho použití není třeba volán
 - na stránce zadejte podle postupu hodnotu JSESSIONID<br><br>
 
 <hr>
+v1.1.1 (16.12.2023)<br>
+- oprava přihlášení přes JSESSIONID u Tipsport.sk<br><br>
+
 v1.1.0 (13.12.2023)<br>
 - možnost nahradit příhlášení  k Tipsportu zadáním hodnoty JSESSIONID přes webový formulář<br><br>
 
@@ -57,11 +60,4 @@ v1.0.3 (11.12.2023)<br>
 - možnost přidat sporty nebo soutěže na blacklist<br>
 - kontrola nastavení prohlížeče<br>
 - změna popisu položek v nastavení<br><br>
-
-v1.0.2 (9.12.2023)<br>
-- ošetření přehrávání některých typů streamů<br><br>
-
-v1.0.1 (8.12.2023)<br>
-- možnost přepnout doplněk na Tipsport.sk<br>
-- lze nastavit URL pro docker<br><br>
 </p>

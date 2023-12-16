@@ -1,3 +1,6 @@
+v1.1.1 (16.12.2023)
+- oprava přihlášení přes JSESSIONID u Tipsport.sk
+
 v1.1.0 (13.12.2023)
 - možnost nahradit příhlášení  k Tipsportu zadáním hodnoty JSESSIONID přes webový formulář
 
@@ -12,6 +15,3 @@ v1.0.3 (11.12.2023)
 - možnost přidat sporty nebo soutěže na blacklist
 - kontrola nastavení prohlížeče
 - změna popisu položek v nastavení
-
-v1.0.2 (9.12.2023)
-- ošetření přehrávání některých typů streamů

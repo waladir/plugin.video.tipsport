@@ -6,6 +6,7 @@ from bottle import run, route, post, template, request, static_file
 import json
 
 from libs.session import save_session
+from libs.api import set_domain
 
 addon = xbmcaddon.Addon()
 template_dir = os.path.join(addon.getAddonInfo('path'), 'resources','templates')
@@ -25,10 +26,10 @@ def page():
         jsessionid = request.params.get('jsessionid').strip()
         if len(jsessionid) == 0:
             message = 'Nezadaná žádná hodnota JSESSIONID!'
-        elif '.czp-wt' not in jsessionid:
+        elif 'p-wt' not in jsessionid:
             message = 'Chybná hodnota JSESSIONID! Přesvědčte se, že jste vložily celou hodnotu!'
         else:
-            cookie = [{'domain' : '.tipsport.cz', 'name' : 'JSESSIONID', 'value' : str(jsessionid)}]
+            cookie = [{'domain' : set_domain('.tipsport.cz'), 'name' : 'JSESSIONID', 'value' : str(jsessionid)}]
             save_session(json.dumps(cookie))
             message = 'Hodnota JSESSIONID uložena do doplňku.'
 
