@@ -12,7 +12,7 @@ from urllib.error import HTTPError
 
 from libs.lists import list_sports, list_streams, list_settings, list_blacklist
 from libs.blacklist import add_to_blacklist, remove_from_blacklist
-from libs.api import init_driver, api_call, set_domain
+from libs.api import api_call, set_domain
 from libs.session import login
 from libs.utils import user_agent, check_config, get_url
 
@@ -59,7 +59,8 @@ def play_stream(id, title):
                 xbmcgui.Dialog().notification('Tipsport.cz', 'Nepodporovaný typ stremu: ' + data['type'], xbmcgui.NOTIFICATION_ERROR, 5000)
                 return
             else:
-                url = data['data'].replace('|', '%7C')                
+                url = data['data'].replace('|', '%7C')   
+
             list_item = xbmcgui.ListItem(path = url)
             list_item.setContentLookup(False)       
             xbmcplugin.setResolvedUrl(_handle, True, list_item)

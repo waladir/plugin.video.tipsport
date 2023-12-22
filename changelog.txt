@@ -1,3 +1,6 @@
+v1.1.2 (22.12.2023)
+- přidáná informace o průběhu zápasu/skóre
+
 v1.1.1 (16.12.2023)
 - oprava přihlášení přes JSESSIONID u Tipsport.sk
 
@@ -10,8 +13,3 @@ v1.0.5 (13.12.2023)
 
 v1.0.4 (12.12.2023)
 - úprava volaní REST API
-
-v1.0.3 (11.12.2023)
-- možnost přidat sporty nebo soutěže na blacklist
-- kontrola nastavení prohlížeče
-- změna popisu položek v nastavení
