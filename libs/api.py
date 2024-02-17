@@ -12,9 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.driver_utils import get_driver_path
 
-from urllib.parse import unquote
 import requests
-import json
 
 from libs.session import login, load_session
 from libs.utils import user_agent

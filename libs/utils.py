@@ -22,3 +22,6 @@ def check_config():
     if addon.getSetting('browser') == 'lokální Google Chrome' and not('amd' in platform.machine().lower() or '86' in platform.machine().lower()):
         xbmcgui.Dialog().textviewer('Tipsport.cz', 'Pro fungování doplňku na vaší platformě je vyžadovaný Selenium Grid. Použití lokálního Google Chrome prohlížeče bohužel není možné. Návod na zprovoznění ve formě docker kontajneru v CoreELEC/LibreELEC nebo informace o případném řešení pro jiné platformy najdete v prvním příspěvku ve vlákně k doplňku na XBMC Kodi CZ/SK fóru:\n\nhttps://www.xbmc-kodi.cz/prispevek-tipsport-cz\n\nV nastavení doplku je pak nutné jako prohlížeč vybrat Selenium Grid.')
         sys.exit()
+    if addon.getSetting('browser') == 'načíst ze souboru' and len(addon.getSetting('jsession_file_folder')) == 0:
+        xbmcgui.Dialog().textviewer('Tipsport.cz', 'Pro načtení JSESSIONID ze souboru je nutné zadat adresář, kde je umístěný!')
+        sys.exit()

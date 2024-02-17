@@ -13,7 +13,7 @@ from urllib.error import HTTPError
 from libs.lists import list_sports, list_streams, list_settings, list_blacklist
 from libs.blacklist import add_to_blacklist, remove_from_blacklist
 from libs.api import api_call, set_domain
-from libs.session import login
+from libs.session import login, export_jsessionid
 from libs.utils import user_agent, check_config, get_url
 
 if len(sys.argv) > 1:
@@ -60,7 +60,6 @@ def play_stream(id, title):
                 return
             else:
                 url = data['data'].replace('|', '%7C')   
-
             list_item = xbmcgui.ListItem(path = url)
             list_item.setContentLookup(False)       
             xbmcplugin.setResolvedUrl(_handle, True, list_item)
@@ -103,6 +102,9 @@ def router(paramstring):
             add_to_blacklist(params['type'], params['name'])
         elif params['action'] == 'remove_from_blacklist':
             remove_from_blacklist(params['type'], params['name'])
+        elif params['action'] == 'export_jsessionid':
+            export_jsessionid()
+
 
         else:
             raise ValueError('Neznámý parametr: {0}!'.format(paramstring))

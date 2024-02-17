@@ -16,7 +16,7 @@ LOGIN_URL = {'CZ' : 'https://www.tipsport.cz/', 'SK' : 'https://www.tipsport.sk/
 
 def login():
     addon = xbmcaddon.Addon()
-    if addon.getSetting('browser') != 'zadání přes web':
+    if addon.getSetting('browser') not in ['zadání přes web', 'načíst ze souboru']:
         from libs.api import init_driver
         driver = init_driver()
         success = True
@@ -51,11 +51,36 @@ def login():
         except Exception as e:
             xbmcgui.Dialog().notification('Tipsport.cz', 'Došlo k chybě při volání prohlížeče', xbmcgui.NOTIFICATION_ERROR, 5000)
         return success
-    else:
+    elif addon.getSetting('browser') == 'zadání přes web':
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
         xbmcgui.Dialog().textviewer('Tipsport.cz', 'Připojte se z prohlížeče na http://' + ip + ':8089/ a zadejte do formuláře platné JSESSIONID podle návodu.')
         sys.exit()
+    else:
+        jsession_file_folder = addon.getSetting('jsession_file_folder')
+        jsessionid = ''
+        if len(jsession_file_folder) > 0:
+            filename = os.path.join(jsession_file_folder, 'jsessionid.txt')
+            try:
+                with open(filename, "r") as f:
+                    for row in f:
+                        jsessionid = row[:-1]
+                        print(jsessionid)
+            except IOError as error:
+                if error.errno != 2:
+                    xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba načtení JSESSIONID', xbmcgui.NOTIFICATION_ERROR, 5000)
+                    return False
+            if len(jsessionid) > 0:
+                from libs.api import set_domain
+                cookie = [{'domain' : set_domain('.tipsport.cz'), 'name' : 'JSESSIONID', 'value' : str(jsessionid)}]
+                save_session(json.dumps(cookie))
+                return True
+            else:
+                xbmcgui.Dialog().notification('Tipsport.cz', 'JSESSIONID se ze souboru nepodařilo načíst', xbmcgui.NOTIFICATION_ERROR, 5000)
+                sys.exit()
+        else:
+            xbmcgui.Dialog().notification('Tipsport.cz', 'Není zadaný adresář se souborem s JSESSIONID', xbmcgui.NOTIFICATION_ERROR, 5000)        
+        
 
 def save_session(data):
     addon = xbmcaddon.Addon()
@@ -82,3 +107,26 @@ def load_session():
             xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba načtení session', xbmcgui.NOTIFICATION_ERROR, 5000)
     return data
 
+def export_jsessionid():
+    addon = xbmcaddon.Addon()
+    jsessionid = ''
+    jsession_file_folder = addon.getSetting('jsession_file_folder')
+    if len(jsession_file_folder) > 0:
+        session = load_session()
+        if len(session) > 0:
+            for cookie in session:
+                if 'name' in cookie and cookie['name'] == 'JSESSIONID':
+                    jsessionid = cookie['value']
+                    filename = os.path.join(jsession_file_folder, 'jsessionid.txt')
+                    try:
+                        with open(filename, "w") as f:
+                            f.write('%s\n' % jsessionid)
+                        xbmcgui.Dialog().notification('Tipsport.cz', 'JSESSIONID bylo uloženo do souboru', xbmcgui.NOTIFICATION_INFO, 5000)    
+                    except IOError:
+                        xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba uložení JSESSIONID', xbmcgui.NOTIFICATION_ERROR, 5000)
+            if len(jsessionid) == 0:
+                xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba získání JSESSIONID', xbmcgui.NOTIFICATION_ERROR, 5000)
+        else:
+            xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba získání JSESSIONID', xbmcgui.NOTIFICATION_ERROR, 5000)
+    else:
+        xbmcgui.Dialog().notification('Tipsport.cz', 'Není zadaný adresář pro export JSESSIONID', xbmcgui.NOTIFICATION_ERROR, 5000)
