@@ -45,7 +45,6 @@ Tento způsob nahrazuje přihlášení a při jeho použití není třeba volán
 <hr>
 v1.1.3 (17.2.2024)<br>
 - přidaná možnost exportu JSESSIONID do souboru a jeho načtení<br>
-- automatická obnova sessiony se nespouští při použití lokálního Google Chrome nebo Selenium Grid<br><br>
 
 v1.1.2 (22.12.2023)<br>
 - přidáná informace o průběhu zápasu/skóre<br><br>
