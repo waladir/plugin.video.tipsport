@@ -52,11 +52,15 @@ def login():
             xbmcgui.Dialog().notification('Tipsport.cz', 'Došlo k chybě při volání prohlížeče', xbmcgui.NOTIFICATION_ERROR, 5000)
         return success
     elif addon.getSetting('browser') == 'zadání přes web':
+        xbmcgui.Dialog().textviewer('Tipsport.cz', 'Kvůli změnám na straně Tipsportu je přihlášení přes JSESSIONID nefunkční.')
+        sys.exit()
         hostname = socket.gethostname()
         ip = socket.gethostbyname(hostname)
         xbmcgui.Dialog().textviewer('Tipsport.cz', 'Připojte se z prohlížeče na http://' + ip + ':8089/ a zadejte do formuláře platné JSESSIONID podle návodu.')
         sys.exit()
     else:
+        xbmcgui.Dialog().textviewer('Tipsport.cz', 'Kvůli změnám na straně Tipsportu je přihlášení přes JSESSIONID nefunkční.')
+        sys.exit()
         jsession_file_folder = addon.getSetting('jsession_file_folder')
         jsessionid = ''
         if len(jsession_file_folder) > 0:
@@ -107,7 +111,7 @@ def load_session():
             xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba načtení session', xbmcgui.NOTIFICATION_ERROR, 5000)
     return data
 
-def export_jsessionid():
+def export_jsessionid(silent = False):
     addon = xbmcaddon.Addon()
     jsessionid = ''
     jsession_file_folder = addon.getSetting('jsession_file_folder')
@@ -121,7 +125,8 @@ def export_jsessionid():
                     try:
                         with open(filename, "w") as f:
                             f.write('%s\n' % jsessionid)
-                        xbmcgui.Dialog().notification('Tipsport.cz', 'JSESSIONID bylo uloženo do souboru', xbmcgui.NOTIFICATION_INFO, 5000)    
+                        if silent == False:
+                            xbmcgui.Dialog().notification('Tipsport.cz', 'JSESSIONID bylo uloženo do souboru', xbmcgui.NOTIFICATION_INFO, 5000)    
                     except IOError:
                         xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba uložení JSESSIONID', xbmcgui.NOTIFICATION_ERROR, 5000)
             if len(jsessionid) == 0:

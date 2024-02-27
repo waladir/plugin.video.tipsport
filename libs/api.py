@@ -12,7 +12,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.driver_utils import get_driver_path
 
+import time
+
 import requests
+import json 
 
 from libs.session import login, load_session
 from libs.utils import user_agent
@@ -24,7 +27,7 @@ def set_domain(url):
     else:
         return url
 
-def init_driver():
+def init_driver(session = False):
     addon = xbmcaddon.Addon()
     options = Options()
     options.add_argument('--headless=new')
@@ -46,6 +49,14 @@ def init_driver():
             driver = webdriver.Chrome(driverPath, options=options, desired_capabilities=caps)
         elif addon.getSetting('browser') == 'Selenium Grid':
             driver = webdriver.Remote(command_executor=addon.getSetting('docker_url'), desired_capabilities=options.to_capabilities())
+        if session == True: 
+            cookies = load_session()
+            if cookies is None:
+                login(driver)
+                cookies = load_session()
+            driver.get(set_domain('https://www.tipsport.cz/rest/'))
+            for cookie in cookies:
+                driver.add_cookie(cookie)
     except Exception as e:
         xbmcgui.Dialog().notification('Tipsport.cz', 'Problém při volaní prohlížeče. Pokud doplněk předtím fungoval, zkuste restartovat zařízení', xbmcgui.NOTIFICATION_ERROR, 10000)        
         sys.exit()
@@ -57,22 +68,24 @@ def get_session():
         login()
     session = requests.Session()
     for cookie in cookies:
-        if cookie['name'] == 'JSESSIONID':
+        # if cookie['name'] != 'xxx':
+        if cookie['name'] in ['JSESSIONID', '__cf_bm']:
             session.cookies.set(cookie['name'], cookie['value'], domain=cookie['domain'])
     return session
 
 def make_request(url, method, session):
     headers = {'User-Agent' : user_agent, 'Content-Type' : 'application/json'}
     if method == 'GET':
-        data = session.get(url = url, headers = headers)
+        data = session.put(url = url, headers = headers)
     elif method == 'PUT':
         data = session.put(url = url, headers = headers)
     return data
 
-def api_call(url, method = 'GET', nolog = False, novalidate = False):
+def api_call_requests(url, method = 'GET', nolog = False, novalidate = False):
     data = {}
     session = get_session()
-    data = make_request(url = url, method = method, session = session).json()
+    response = make_request(url = url, method = method, session = session)
+    data = response.json()
     xbmc.log('Tipsport.cz > ' + str(url))
     if nolog == False or 'errorCode' in data:
         xbmc.log('Tipsport.cz > ' + str(data))
@@ -80,8 +93,39 @@ def api_call(url, method = 'GET', nolog = False, novalidate = False):
         login()
         session.close()
         session = get_session()
-        data = make_request(url = url, method = method, session = session).json()
+        response = make_request(url = url, method = method, session = session)
+        data = response.json()
         xbmc.log('Tipsport.cz > ' + str(url))
         if nolog == False or 'errorCode' in data:
             xbmc.log('Tipsport.cz > ' + str(data))
+    return data
+
+def api_call(url, method = 'GET', nolog = False, novalidate = False):
+    data = {}
+    try:
+        driver = init_driver(session = True)
+        if method == 'GET':
+            driver.get(url)
+        elif method == 'PUT':
+            driver.put(url)
+        WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.TAG_NAME, 'body')))
+        data = json.loads(driver.find_element(By.TAG_NAME, 'body').text)
+        # time.sleep(300)        
+    except Exception as e:
+        pass
+    if 'errorCode' in data and novalidate == False:
+        try:
+            login()
+            if method == 'GET':
+                driver.get(url)
+            elif method == 'PUT':
+                driver.put(url)
+            WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.TAG_NAME, 'body')))
+            data = json.loads(driver.find_element(By.TAG_NAME, 'body').text)
+        except Exception as e:
+            pass
+    try:
+        driver.quit()
+    except Exception as e:
+        xbmcgui.Dialog().notification('Tipsport.cz', 'Došlo k chybě při volání prohlížeče', xbmcgui.NOTIFICATION_ERROR, 5000)
     return data

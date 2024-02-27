@@ -43,6 +43,9 @@ Tento způsob nahrazuje přihlášení a při jeho použití není třeba volán
 - na stránce zadejte podle postupu hodnotu JSESSIONID<br><br>
 
 <hr>
+v1.1.4 (27.2.2024)<br>
+- změna volání API přes Selenium<br><br>
+
 v1.1.3 (17.2.2024)<br>
 - přidaná možnost exportu JSESSIONID do souboru a jeho načtení<br>
 
@@ -54,8 +57,4 @@ v1.1.1 (16.12.2023)<br>
 
 v1.1.0 (13.12.2023)<br>
 - možnost nahradit příhlášení  k Tipsportu zadáním hodnoty JSESSIONID přes webový formulář<br><br>
-
-v1.0.5 (13.12.2023)<br>
-- přidání služby, která prodlužuje platnost sessiony<br>
-- úprava logování<br><br>
 </p>

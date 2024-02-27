@@ -79,6 +79,7 @@ def list_menu():
     xbmcplugin.endOfDirectory(_handle, cacheToDisc = False)
 
 check_config()
+
 def router(paramstring):
     params = dict(parse_qsl(paramstring))
     if params:
