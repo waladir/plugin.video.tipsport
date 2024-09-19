@@ -69,7 +69,6 @@ def make_request(url, method):
             for cookie in cookies:
                 if cookie['name'] in ['JSESSIONID'] and cookie['value'] is not None:
                     jsessionid = cookie['value']
-
     headers = {'User-Agent' : user_agent, 'Accept': 'application/json', 'Content-Type' : 'application/json', 'Cookie' : 'JSESSIONID=' + jsessionid}
     if method == 'GET':
         request = Request(url = url, headers = headers, method = 'GET')

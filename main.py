@@ -66,7 +66,15 @@ def play_stream(id, title):
         else:
             xbmcgui.Dialog().notification('Tipsport.cz', data['data'], xbmcgui.NOTIFICATION_ERROR, 5000)
     else:
-        xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při spuštení streamu', xbmcgui.NOTIFICATION_ERROR, 5000)
+        addon = xbmcaddon.Addon()
+        if 'err' in data and data['err'] == 'Unauthorized':
+            if addon.getSetting('browser') in ['zadání přes web', 'načíst ze souboru']:
+                xbmcgui.Dialog().notification('Tipsport.cz', 'Neplatná session, zkuste zadat nové JSESSIONID', xbmcgui.NOTIFICATION_ERROR, 5000)                
+            else:
+                xbmcgui.Dialog().notification('Tipsport.cz', 'Neplatná session, zkusím vytvořit novou', xbmcgui.NOTIFICATION_ERROR, 5000)
+                login()
+        else:
+            xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při spuštení streamu', xbmcgui.NOTIFICATION_ERROR, 5000)
 
 def list_menu():
     addon = xbmcaddon.Addon()

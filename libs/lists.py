@@ -2,8 +2,10 @@
 import sys
 import xbmcgui
 import xbmcplugin
+import xbmcaddon
 
 from libs.api import api_call, set_domain
+from libs.session import login
 from libs.blacklist import load_blacklist
 from libs.utils import get_url, plugin_id
 
@@ -32,7 +34,15 @@ def list_streams(id, label):
                                 url = get_url(action = 'play_stream', id = item[i]['id'], title = item[i]['name'])
                                 xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     else:
-        xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při načtení streamů', xbmcgui.NOTIFICATION_ERROR, 5000)
+        addon = xbmcaddon.Addon()
+        if 'err' in data and data['err'] == 'Unauthorized':
+            if addon.getSetting('browser') in ['zadání přes web', 'načíst ze souboru']:
+                xbmcgui.Dialog().notification('Tipsport.cz', 'Neplatná session, zkuste zadat nové JSESSIONID', xbmcgui.NOTIFICATION_ERROR, 5000)                
+            else:
+                xbmcgui.Dialog().notification('Tipsport.cz', 'Neplatná session, zkusím vytvořit novou', xbmcgui.NOTIFICATION_ERROR, 5000)
+                login()
+        else:
+            xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při načtení streamů', xbmcgui.NOTIFICATION_ERROR, 5000)
     xbmcplugin.endOfDirectory(_handle, cacheToDisc = False)
 
 def list_sports():
@@ -50,7 +60,15 @@ def list_sports():
                 url = get_url(action = 'list_streams', id = sport['id'], label = sport['title'])
                 xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
     else:
-        xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při načtení streamůx', xbmcgui.NOTIFICATION_ERROR, 5000)
+        addon = xbmcaddon.Addon()
+        if 'err' in data and data['err'] == 'Unauthorized':
+            if addon.getSetting('browser') in ['zadání přes web', 'načíst ze souboru']:
+                xbmcgui.Dialog().notification('Tipsport.cz', 'Neplatná session, zkuste zadat nové JSESSIONID', xbmcgui.NOTIFICATION_ERROR, 5000)                
+            else:
+                xbmcgui.Dialog().notification('Tipsport.cz', 'Neplatná session, zkusím vytvořit novou', xbmcgui.NOTIFICATION_ERROR, 5000)
+                login()
+        else:
+            xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při načtení streamů', xbmcgui.NOTIFICATION_ERROR, 5000)
 
 def list_blacklist(label):
     xbmcplugin.setPluginCategory(_handle, label)
