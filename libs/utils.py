@@ -6,7 +6,7 @@ import xbmcgui
 
 from urllib.parse import urlencode
 
-user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
+user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0'
 plugin_id = 'plugin.video.tipsport'
 
 _url = sys.argv[0]

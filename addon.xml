@@ -1,11 +1,8 @@
-﻿<addon id="plugin.video.tipsport" name="Tipsport.cz" provider-name="waladir" version="1.1.4">
+﻿<addon id="plugin.video.tipsport" name="Tipsport.cz" provider-name="waladir" version="1.1.5">
   <requires>
     <import addon="xbmc.python" version="3.0.0"/>
     <import addon="script.module.selenium"/>
-    <import addon="script.module.six"/>
-    <import addon="script.module.certifi"/>
     <import addon="script.module.urllib3"/>    
-    <import addon="script.module.requests"/>    
     <import addon="script.module.bottle"/>
   </requires>
   <extension library="main.py" point="xbmc.python.pluginsource">
@@ -21,6 +18,10 @@ Informace o zprovoznění doplňku najdete na https://xbmc-kodi.cz/prispevek-tip
     <platform>all</platform>
     <source>https://github.com/waladir/plugin.video.tipsport</source>
     <news>
+v1.1.5 (19.9.2024)
+- volání API přímo doplňkem
+- znovuzprovoznění zadání JSESSIONID přes webový formulář
+
 v1.1.4 (27.2.2024)
 - změna volání API přes Selenium
 
@@ -32,9 +33,6 @@ v1.1.2 (22.12.2023)
       
 v1.1.1 (16.12.2023)
 - oprava přihlášení přes JSESSIONID u Tipsport.sk
-
-v1.1.0 (13.12.2023)
-- možnost nahradit příhlášení  k Tipsportu zadáním hodnoty JSESSIONID přes webový formulář
     </news>
     <assets>
         <icon>icon.png</icon>

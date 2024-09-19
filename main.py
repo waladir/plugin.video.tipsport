@@ -56,7 +56,7 @@ def play_stream(id, title):
                     xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při spuštení streamu', xbmcgui.NOTIFICATION_ERROR, 5000)
                     return
             elif 'URL' in data['type']:
-                xbmcgui.Dialog().notification('Tipsport.cz', 'Nepodporovaný typ stremu: ' + data['type'], xbmcgui.NOTIFICATION_ERROR, 5000)
+                xbmcgui.Dialog().notification('Tipsport.cz', 'Nepodporovaný typ streamu: ' + data['type'], xbmcgui.NOTIFICATION_ERROR, 5000)
                 return
             else:
                 url = data['data'].replace('|', '%7C')   
@@ -79,7 +79,6 @@ def list_menu():
     xbmcplugin.endOfDirectory(_handle, cacheToDisc = False)
 
 check_config()
-
 def router(paramstring):
     params = dict(parse_qsl(paramstring))
     if params:

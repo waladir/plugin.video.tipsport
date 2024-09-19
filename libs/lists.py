@@ -50,7 +50,7 @@ def list_sports():
                 url = get_url(action = 'list_streams', id = sport['id'], label = sport['title'])
                 xbmcplugin.addDirectoryItem(_handle, url, list_item, True)
     else:
-        xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při načtení streamů', xbmcgui.NOTIFICATION_ERROR, 5000)
+        xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při načtení streamůx', xbmcgui.NOTIFICATION_ERROR, 5000)
 
 def list_blacklist(label):
     xbmcplugin.setPluginCategory(_handle, label)
