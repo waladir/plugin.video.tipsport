@@ -43,6 +43,9 @@ Tento způsob nahrazuje přihlášení a při jeho použití není třeba volán
 - na stránce zadejte podle postupu hodnotu JSESSIONID<br><br>
 
 <hr>
+v1.1.6 (21.9.2024)<br>
+- vylepšené ošetření neplatné sessiony<br><br>
+
 v1.1.5 (19.9.2024)<br>
 - volání API přímo doplňkem<br>
 - znovuzprovoznění zadání JSESSIONID přes webový formulář<br><br>
@@ -55,7 +58,4 @@ v1.1.3 (17.2.2024)<br>
 
 v1.1.2 (22.12.2023)<br>
 - přidáná informace o průběhu zápasu/skóre<br><br>
-
-v1.1.1 (16.12.2023)<br>
-- oprava přihlášení přes JSESSIONID u Tipsport.sk<br><br>
 </p>

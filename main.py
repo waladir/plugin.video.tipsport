@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import xbmc
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
@@ -71,8 +72,11 @@ def play_stream(id, title):
             if addon.getSetting('browser') in ['zadání přes web', 'načíst ze souboru']:
                 xbmcgui.Dialog().notification('Tipsport.cz', 'Neplatná session, zkuste zadat nové JSESSIONID', xbmcgui.NOTIFICATION_ERROR, 5000)                
             else:
-                xbmcgui.Dialog().notification('Tipsport.cz', 'Neplatná session, zkusím vytvořit novou', xbmcgui.NOTIFICATION_ERROR, 5000)
-                login()
+                success = login()
+                if success == True:
+                    play_stream(id, title)
+                else:
+                    xbmcgui.Dialog().notification('Tipsport.cz', 'Neplatná session', xbmcgui.NOTIFICATION_ERROR, 5000)
         else:
             xbmcgui.Dialog().notification('Tipsport.cz', 'Chyba při spuštení streamu', xbmcgui.NOTIFICATION_ERROR, 5000)
 
