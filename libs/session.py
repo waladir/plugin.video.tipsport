@@ -29,7 +29,6 @@ def login():
         WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, '//button[text()="' + LOGIN_BUTTON1[addon.getSetting('tipsport_version')] + '"]')))
         login_button = driver.find_element(By.XPATH, '//button[text()="' + LOGIN_BUTTON1[addon.getSetting('tipsport_version')] + '"]')
         login_button.click()
-
         WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.NAME, 'username')))
         username = driver.find_element(By.NAME, 'username')
         username.send_keys(addon.getSetting('username'))

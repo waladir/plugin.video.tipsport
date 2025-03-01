@@ -2,7 +2,7 @@
 import os
 import xbmcaddon
 
-from bottle import run, route, post, template, request, static_file
+from bottle import run, route, post, template, request, static_file, TEMPLATE_PATH
 import json
 
 from libs.session import save_session
@@ -32,8 +32,8 @@ def page():
             cookie = [{'domain' : set_domain('.tipsport.cz'), 'name' : 'JSESSIONID', 'value' : str(jsessionid)}]
             save_session(json.dumps(cookie))
             message = 'Hodnota JSESSIONID uložena do doplňku.'
-
-    return template(os.path.join(template_dir, 'form.tpl'), message = message)
+    TEMPLATE_PATH.append(template_dir)
+    return template('form.tpl', message = message)
 
 def start_server():
     run(host = '0.0.0.0', port = 8089)

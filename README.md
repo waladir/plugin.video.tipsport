@@ -43,6 +43,12 @@ Tento způsob nahrazuje přihlášení a při jeho použití není třeba volán
 - na stránce zadejte podle postupu hodnotu JSESSIONID<br><br>
 
 <hr>
+v1.1.8 (1.3.2025)<br>
+- aktualizace volání šablony<br><br>
+
+v1.1.7 (22.12.2024)<br>
+- automatický update chromedriveru<br><br>
+
 v1.1.6 (21.9.2024)<br>
 - vylepšené ošetření neplatné sessiony<br><br>
 
@@ -52,10 +58,4 @@ v1.1.5 (19.9.2024)<br>
 
 v1.1.4 (27.2.2024)<br>
 - změna volání API přes Selenium<br><br>
-
-v1.1.3 (17.2.2024)<br>
-- přidaná možnost exportu JSESSIONID do souboru a jeho načtení<br>
-
-v1.1.2 (22.12.2023)<br>
-- přidáná informace o průběhu zápasu/skóre<br><br>
 </p>

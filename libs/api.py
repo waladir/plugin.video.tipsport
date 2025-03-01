@@ -17,7 +17,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.driver_utils import get_driver_path
 
 from libs.session import login, load_session
-from libs.utils import user_agent
+from libs.utils import user_agent, check_chromedriver
 
 def set_domain(url):
     addon = xbmcaddon.Addon()
@@ -46,6 +46,7 @@ def init_driver():
     try:
         if addon.getSetting('browser') == 'lokální Google Chrome':
             driverPath = str(get_driver_path('chromedriver'))
+            check_chromedriver(driverPath)
             driver = webdriver.Chrome(driverPath, options=options, desired_capabilities=caps)
         elif addon.getSetting('browser') == 'Selenium Grid':
             driver = webdriver.Remote(command_executor=addon.getSetting('docker_url'), desired_capabilities=options.to_capabilities())
